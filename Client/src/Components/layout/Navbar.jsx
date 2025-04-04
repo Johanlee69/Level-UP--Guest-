@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../Context/AuthContext';
 import { useLevel } from '../../Context/LevelContext';
-import { FaUser, FaSignOutAlt } from 'react-icons/fa';
 import ProfileDropdown from '../Homepage/components/ProfileDropdown';
 import { SidebarToggle } from '../Homepage/components/Sidebar';
 import LevelDetailsPopup from '../Homepage/components/LevelDetailsPopup';
@@ -56,15 +55,9 @@ const LevelProgressRing = ({ level, progress, showDetails, setShowDetails }) => 
 };
 
 const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
-  const { isAuthenticated, user, logout } = useAuth();
+  const { user } = useAuth();
   const { level, progress } = useLevel();
-  const navigate = useNavigate();
   const [showLevelDetails, setShowLevelDetails] = useState(false);
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
 
   return (
     <nav className="bg-[#362f2f57] backdrop-blur-md border-b border-[#ffffff20] shadow-lg z-50 fixed top-0 left-0 right-0">
@@ -81,76 +74,37 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
           {/* Desktop menu */}
           <div className="hidden md:flex md:items-center">
             <div className="ml-10 flex items-center space-x-4">
-              {isAuthenticated ? (
-                <>
-                  {/* Level indicator */}
-                  <LevelProgressRing 
-                    level={level} 
-                    progress={progress} 
-                    showDetails={showLevelDetails}
-                    setShowDetails={setShowLevelDetails}
-                  />
-                  
-                  {/* Username display */}
-                  <span className="text-white font-medium mr-2">
-                    {user?.name || 'User'}
-                  </span>
-                  <div className="ml-2">
-                    <ProfileDropdown />
-                  </div>
-                </>
-              ) : (
-                <>
-                  <Link 
-                    to="/login" 
-                    className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
-                  >
-                    Login
-                  </Link>
-                  <Link 
-                    to="/register" 
-                    className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-md text-sm font-medium"
-                  >
-                    Sign Up
-                  </Link>
-                </>
-              )}
+              <LevelProgressRing 
+                level={level} 
+                progress={progress} 
+                showDetails={showLevelDetails}
+                setShowDetails={setShowLevelDetails}
+              />
+              
+              <span className="text-white font-medium mr-2">
+                {user?.name || 'Guest User'}
+              </span>
+              <div className="ml-2">
+                <ProfileDropdown />
+              </div>
             </div>
           </div>
 
           {/* Mobile menu */}
           <div className="md:hidden flex items-center">
-            {isAuthenticated ? (
-              <div className="flex items-center">
-                {/* Level indicator for mobile */}
-                <LevelProgressRing 
-                  level={level} 
-                  progress={progress} 
-                  showDetails={showLevelDetails}
-                  setShowDetails={setShowLevelDetails}
-                />
-                
-                <span className="text-white text-sm mr-2">
-                  {user?.name || 'User'}
-                </span>
-                <ProfileDropdown />
-              </div>
-            ) : (
-              <div className="flex space-x-2">
-                <Link 
-                  to="/login" 
-                  className="text-gray-300 hover:text-white px-2 py-1 rounded-md text-sm font-medium"
-                >
-                  Login
-                </Link>
-                <Link 
-                  to="/register" 
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white px-3 py-1 rounded-md text-sm font-medium"
-                >
-                  Sign Up
-                </Link>
-              </div>
-            )}
+            <div className="flex items-center">
+              <LevelProgressRing 
+                level={level} 
+                progress={progress} 
+                showDetails={showLevelDetails}
+                setShowDetails={setShowLevelDetails}
+              />
+              
+              <span className="text-white text-sm mr-2">
+                {user?.name || 'Guest User'}
+              </span>
+              <ProfileDropdown />
+            </div>
           </div>
         </div>
       </div>

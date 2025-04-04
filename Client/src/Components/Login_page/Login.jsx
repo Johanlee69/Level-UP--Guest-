@@ -38,20 +38,13 @@ const Login = () => {
       }
     } catch (err) {
       console.error("Authentication error:", err);
-      
-      // Better error extraction from different possible error formats
       let errorMsg;
-      
-      // Check if the error has a response object with data (from axios)
       if (err.response?.data) {
         errorMsg = err.response.data.error || err.response.data.message;
-      } 
-      // Check if the error is coming from our API service or AuthContext
-      else if (err.message) {
+      } else if (err.message) {
         errorMsg = err.message;
       }
       
-      // If all else fails, provide a generic message
       if (!errorMsg || errorMsg.includes("Login failed") || errorMsg.includes("failed")) {
         errorMsg = "Authentication failed. Please check your credentials and try again.";
       }

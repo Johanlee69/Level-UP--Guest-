@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import { Routes, Route, Navigate, Link } from 'react-router-dom';
-import Login from './Components/Login_page/Login';
-import StartUP from './Components/Startup/StartUP';
 import Homepage from './Components/Homepage/Homepage';
 import Layout from './Components/layout/Layout';
-import ProtectedRoute from './Components/ProtectedRoute';
 import './global.css';
 
 function App() {
@@ -16,38 +13,27 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Login />} />
-      <Route path="/startup" element={<StartUP />} />
+      <Route path="/" element={<Navigate to="/home" />} />
 
       <Route path="/home" element={
-        <ProtectedRoute>
-          <Layout toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}>
-            <Homepage initialTab="daily" />
-          </Layout>
-        </ProtectedRoute>
+        <Layout toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}>
+          <Homepage initialTab="daily" />
+        </Layout>
       } />
       <Route path="/tasks" element={
-        <ProtectedRoute>
-          <Layout toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}>
-            <Homepage initialTab="calendar" />
-          </Layout>
-        </ProtectedRoute>
+        <Layout toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}>
+          <Homepage initialTab="calendar" />
+        </Layout>
       } />
       <Route path="/custom" element={
-        <ProtectedRoute>
-          <Layout toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}>
-            <Homepage initialTab="custom" />
-          </Layout>
-        </ProtectedRoute>
+        <Layout toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}>
+          <Homepage initialTab="custom" />
+        </Layout>
       } />
       <Route path="/performance" element={
-        <ProtectedRoute>
-          <Layout toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}>
-            <Homepage initialTab="performance" />
-          </Layout>
-        </ProtectedRoute>
+        <Layout toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}>
+          <Homepage initialTab="performance" />
+        </Layout>
       } />
 
       <Route path="*" element={

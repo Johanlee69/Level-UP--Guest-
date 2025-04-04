@@ -6,7 +6,7 @@ const LevelContext = createContext();
 export const useLevel = () => useContext(LevelContext);
 
 export const LevelProvider = ({ children }) => {
-  const { user, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const [level, setLevel] = useState(1);
   const [xp, setXp] = useState(0);
   const [totalXp, setTotalXp] = useState(0);
@@ -51,20 +51,19 @@ export const LevelProvider = ({ children }) => {
   };
   
   useEffect(() => {
-    if (isAuthenticated && user) {
-      const savedTotalXp = localStorage.getItem('totalXp');
+    // Load level data from localStorage
+    const savedTotalXp = localStorage.getItem('totalXp');
+    
+    if (savedTotalXp) {
+      const totalXpValue = parseInt(savedTotalXp, 10);
+      setTotalXp(totalXpValue);
       
-      if (savedTotalXp) {
-        const totalXpValue = parseInt(savedTotalXp, 10);
-        setTotalXp(totalXpValue);
-        
-        const levelData = calculateLevelFromXp(totalXpValue);
-        setLevel(levelData.level);
-        setXp(levelData.currentLevelXp);
-        setNextLevelXp(levelData.nextLevelXp);
-      }
+      const levelData = calculateLevelFromXp(totalXpValue);
+      setLevel(levelData.level);
+      setXp(levelData.currentLevelXp);
+      setNextLevelXp(levelData.nextLevelXp);
     }
-  }, [isAuthenticated, user]);
+  }, []);
   
   const addXp = (amount) => {
     const newTotalXp = totalXp + amount;

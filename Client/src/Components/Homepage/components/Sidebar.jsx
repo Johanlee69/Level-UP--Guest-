@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../../Context/AuthContext';
-import { chatAPI } from '../../../utils/api';
+import { chatService } from '../../../services/api';
 import './Sidebar.css';
 
 // Enhanced markdown formatter
@@ -86,7 +86,7 @@ export const SidebarToggle = ({ isOpen, toggleSidebar }) => {
 };
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
-  const { logout, user } = useAuth();
+  const { user } = useAuth();
   const [chatMessage, setChatMessage] = useState('');
   const [chatMessages, setChatMessages] = useState([
     { text: "Welcome! I'm your AI assistant. How can I help you level up your productivity today?", sender: 'assistant' }
@@ -118,8 +118,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     setChatMessages(prev => [...prev, { text: "Thinking...", sender: 'assistant', isLoading: true }]);
     
     try {
-      // Send request to backend using our API utility
-      const response = await chatAPI.sendMessage(userQuery);
+      // Send request to backend using our API service
+      const response = await chatService.getChatResponse(userQuery);
       
       // Remove loading message
       setChatMessages(prev => prev.filter(msg => !msg.isLoading));
@@ -203,17 +203,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 </button>
               </form>
             </div>
-          </div>
-
-          {/* Sidebar footer with logout */}
-          <div className="sidebar-footer">
-            <button className="logout-btn" onClick={logout}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="nav-icon" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M3 3a1 1 0 00-1 1v12a1 1 0 001 1h12a1 1 0 001-1V9.5a1 1 0 10-2 0V15H4V5h10v2.5a1 1 0 102 0V4a1 1 0 00-1-1H3z" clipRule="evenodd" />
-                <path d="M16 3a1 1 0 011 1v4.5a1 1 0 11-2 0V5.83l-5.58 5.59a1 1 0 01-1.41-1.42l5.58-5.58H10.5a1 1 0 110-2H16z" />
-              </svg>
-              Logout
-            </button>
           </div>
         </div>
       </div>
