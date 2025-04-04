@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { chatAPI } from '../../../utils/api';
+import { chatService } from '../../../services/api';
 import './TaskSuggestions.css';
 
 const TaskSuggestions = ({ tasks, onAddTask }) => {
@@ -33,12 +33,19 @@ const TaskSuggestions = ({ tasks, onAddTask }) => {
     try {
       const prompt = `Based on your task "${recentTask.title}", here are some related tasks. Each must be a single line. Use *asterisks* for bold text or important words. Respond with 5 bullet points only,no confirmation just the task`;
       
-      const response = await chatAPI.sendMessage(prompt);
+      const response = await chatService.getChatResponse(prompt);
       
-      if (response && response.data && response.data.message) {
-        // Parse bullet points from the response
-        const parsedSuggestions = parseBulletPoints(response.data.message);
-        setSuggestions(parsedSuggestions);
+      if (response && (response.success || response.data)) {
+        // Access message from the response - handle both possible structures
+        const aiMessage = response.data?.message || response.message;
+        
+        if (aiMessage) {
+          // Parse bullet points from the response
+          const parsedSuggestions = parseBulletPoints(aiMessage);
+          setSuggestions(parsedSuggestions);
+        } else {
+          throw new Error('No message content in AI response');
+        }
       } else {
         throw new Error('Invalid response from AI');
       }

@@ -8,6 +8,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  timeout: 15000, // 15 second timeout
 });
 
 // Add response interceptor to handle errors 
@@ -32,13 +33,37 @@ api.interceptors.response.use(
 
 // The only API service needed - Gemini API
 export const chatService = {
-  getChatResponse: async (message) => {
+  getChatResponse: async (message, retryCount = 0) => {
     try {
+      console.log('Sending AI request to:', `${API_URL}/chat/message`);
       const response = await api.post('/chat/message', { message });
+      
+      // Log the response for debugging
+      console.log('AI response received:', response.data ? 'Data present' : 'No data');
+      
       return response.data;
     } catch (error) {
       console.error('Chat API error:', error);
-      return Promise.reject(new Error(error.response?.data?.message || 'Failed to get AI response'));
+      
+      // Implement retry logic (max 2 retries)
+      if (retryCount < 2 && (error.code === 'ECONNABORTED' || !error.response)) {
+        console.log(`Retrying AI request (attempt ${retryCount + 1})...`);
+        return new Promise(resolve => {
+          // Wait 1 second before retrying
+          setTimeout(() => {
+            resolve(chatService.getChatResponse(message, retryCount + 1));
+          }, 1000);
+        });
+      }
+      
+      // If we get here, all retries failed or error wasn't retryable
+      return {
+        success: false,
+        data: { 
+          message: 'Failed to connect to AI service. Please try again later.' 
+        },
+        error: error.response?.data?.message || error.message || 'Failed to get AI response'
+      };
     }
   }
 };

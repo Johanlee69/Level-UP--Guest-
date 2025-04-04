@@ -108,47 +108,20 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     setChatMessages(prev => [...prev, newUserMessage]);
     
     // Clear input field
-    const userQuery = chatMessage;
     setChatMessage('');
     
-    // Set loading state
+    // Set loading state briefly for UX
     setIsLoading(true);
     
-    // Add loading indicator
-    setChatMessages(prev => [...prev, { text: "Thinking...", sender: 'assistant', isLoading: true }]);
-    
-    try {
-      // Send request to backend using our API service
-      const response = await chatService.getChatResponse(userQuery);
-      
-      // Remove loading message
-      setChatMessages(prev => prev.filter(msg => !msg.isLoading));
-      
-      // Add AI response
-      if (response.success) {
-        setChatMessages(prev => [...prev, { 
-          text: response.data.message, 
-          sender: 'assistant',
-          isFormatted: true
-        }]);
-      } else {
-        throw new Error(response.error || 'Response not successful');
-      }
-    } catch (error) {
-      console.error('Error getting AI response:', error);
-      
-      // Remove loading message
-      setChatMessages(prev => prev.filter(msg => !msg.isLoading));
-      
-      // Add error message
+    // Add notification message about AI unavailability
+    setTimeout(() => {
       setChatMessages(prev => [...prev, { 
-        text: `Sorry, I couldn't process your request: ${error.message || 'Please try again later.'}`, 
+        text: "AI chat is not available in this guest version. The backend services have not been configured.",
         sender: 'assistant',
         isError: true
       }]);
-    } finally {
       setIsLoading(false);
-    }
+    }, 700);
   };
 
   return (
