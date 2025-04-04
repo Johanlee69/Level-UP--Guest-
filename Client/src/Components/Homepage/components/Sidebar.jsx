@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useAuth } from '../../../Context/AuthContext';
+import { useAuth } from '../../../Context/caseAdapter';
 import { chatService } from '../../../services/api';
 import './Sidebar.css';
 

@@ -1,5 +1,5 @@
 import { createContext, useState, useContext, useEffect } from "react";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "./caseAdapter";
 
 const LevelContext = createContext();
 

@@ -4,7 +4,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import App from './App.jsx'
 import './global.css'
 import './App.css'
-import { AuthProvider } from './Context/AuthContext'
+import { AuthProvider } from './Context/caseAdapter'
 import { LevelProvider } from './Context/LevelContext'
 
 createRoot(document.getElementById('root')).render(

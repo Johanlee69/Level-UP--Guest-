@@ -31,28 +31,14 @@ const TaskSuggestions = ({ tasks, onAddTask }) => {
     setError(null);
 
     try {
-      const prompt = `Based on your task "${recentTask.title}", here are some related tasks. Each must be a single line. Use *asterisks* for bold text or important words. Respond with 5 bullet points only,no confirmation just the task`;
-      
-      const response = await chatService.getChatResponse(prompt);
-      
-      if (response && (response.success || response.data)) {
-        // Access message from the response - handle both possible structures
-        const aiMessage = response.data?.message || response.message;
-        
-        if (aiMessage) {
-          // Parse bullet points from the response
-          const parsedSuggestions = parseBulletPoints(aiMessage);
-          setSuggestions(parsedSuggestions);
-        } else {
-          throw new Error('No message content in AI response');
-        }
-      } else {
-        throw new Error('Invalid response from AI');
-      }
+      // Instead of making an API call, return a predefined error message
+      setTimeout(() => {
+        setError('AI task suggestions are not available in this guest version. The backend services have not been configured.');
+        setIsLoading(false);
+      }, 700);
     } catch (err) {
-      console.error('Error fetching suggestions:', err);
-      setError('Could not generate new tasks, wait 6 seconds..');
-    } finally {
+      console.error('Error with task suggestions:', err);
+      setError('AI task suggestions are not available in this guest version.');
       setIsLoading(false);
     }
   };

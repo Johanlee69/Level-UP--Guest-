@@ -5,7 +5,7 @@ import { Calendar } from './components/Calendar';
 import { PerformanceAnalytics } from '../Performacne/PerformanceAnalytics';
 import Sidebar from './components/Sidebar';
 import { DigitalClock } from './components/DigitalClock';
-import { useAuth } from '../../Context/AuthContext';
+import { useAuth } from '../../Context/caseAdapter';
 import { useLevel } from '../../Context/LevelContext';
 import '../Login_page/Login.css';
 import './components/Homepage.css';
