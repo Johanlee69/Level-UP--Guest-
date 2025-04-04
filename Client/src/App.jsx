@@ -16,13 +16,11 @@ function App() {
 
   return (
     <Routes>
-      {/* Public routes */}
       <Route path="/" element={<Navigate to="/login" />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Login />} />
       <Route path="/startup" element={<StartUP />} />
 
-      {/* Protected routes */}
       <Route path="/home" element={
         <ProtectedRoute>
           <Layout toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen}>
@@ -52,7 +50,6 @@ function App() {
         </ProtectedRoute>
       } />
 
-      {/* 404 route */}
       <Route path="*" element={
         <div className="flex items-center justify-center h-screen bg-gray-900">
           <div className="text-center">

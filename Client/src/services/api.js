@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Base API URL
 const API_URL = 'http://localhost:5003/api';
 
 // Create axios instance with default config
@@ -11,7 +10,6 @@ const api = axios.create({
   },
 });
 
-// Add request interceptor for auth token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -38,18 +36,16 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Distinguish between different types of errors for better handling
+    
     if (error.response) {
-      // Server responded with an error status (4xx, 5xx)
+      
       console.error("API Error:", error.response);
       
       // Handle 401 errors (unauthorized)
       if (error.response.status === 401) {
-        // Clear authentication data
         localStorage.removeItem('token');
         localStorage.removeItem('username');
-        
-        // Only redirect if we're not already on the login page and not trying to login
+      
         const isLoginPath = window.location.pathname.includes('/login');
         const isLoginRequest = error.config && 
           (error.config.url.includes('/auth/login') || 
@@ -71,7 +67,6 @@ api.interceptors.response.use(
       }
     } 
     else if (error.request) {
-      // No response received from server
       console.error("API Network Error: No response from server", error.request);
     } 
     else {
@@ -157,7 +152,6 @@ export const authService = {
   refreshToken: () => api.post('/auth/refresh-token'),
 };
 
-// User related API calls
 export const userService = {
   updateProfile: (userData) => api.put('/users/profile', userData),
   getProfile: () => api.get('/users/profile'),

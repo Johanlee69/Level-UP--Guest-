@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-// User Schema
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -58,14 +57,12 @@ const UserSchema = new mongoose.Schema({
 });
 
 UserSchema.pre('save', async function(next) {
-  // Only hash password if it's modified or new
   if (!this.isModified('password') || !this.password) {
     return next();
   }
 
   try {
     const salt = await bcrypt.genSalt(10);
-    // Hash password with salt
     this.password = await bcrypt.hash(this.password, salt);
     next();
   } catch (error) {
@@ -88,4 +85,4 @@ UserSchema.methods.getSignedJwtToken = function() {
 
 const User = mongoose.model('User', UserSchema);
 
-module.exports = User; 
+module.exports = User;

@@ -20,14 +20,12 @@ function Homepage({ initialTab, toggleSidebar, isSidebarOpen }) {
   const { user } = useAuth();
   const { xpGained, showXpPopup, closeXpPopup } = useLevel();
 
-  // Use initialTab when it changes (e.g., when route changes)
   useEffect(() => {
     if (initialTab) {
       setActiveTab(initialTab);
     }
   }, [initialTab]);
 
-  // Data state
   const [calendarTasks, setCalendarTasks] = useState({});
   const [deletedCalendarTaskIds, setDeletedCalendarTaskIds] = useState([]);
   const [dailyTasks, setDailyTasks] = useState([]);
@@ -35,131 +33,106 @@ function Homepage({ initialTab, toggleSidebar, isSidebarOpen }) {
   const [error, setError] = useState(null);
   const [showFocusMode, setShowFocusMode] = useState(false);
 
-  // Load data from localStorage once on component mount
   useEffect(() => {
-    // Note that we're not using setIsLoading directly in this effect
-    // to avoid the problem of batched updates
     loadLocalStorageData();
-  }, []); // Empty dependency array ensures it runs only once on mount
+  }, []);
 
-  // Function to load data from localStorage
   const loadLocalStorageData = () => {
     try {
-      // Load calendar tasks
       const storedCalendarTasks = localStorage.getItem('calendarTasks');
       if (storedCalendarTasks) {
         try {
           const parsedCalendarTasks = JSON.parse(storedCalendarTasks);
           setCalendarTasks(parsedCalendarTasks);
         } catch (error) {
-          // Handle parsing error silently
           setCalendarTasks({});
         }
       }
 
-      // Load daily tasks
       const storedDailyTasks = localStorage.getItem('dailyTasks');
       if (storedDailyTasks) {
         try {
           const parsedDailyTasks = JSON.parse(storedDailyTasks);
           setDailyTasks(parsedDailyTasks);
         } catch (error) {
-          // Handle parsing error silently
           setDailyTasks([]);
         }
       }
 
-      // Load custom cards
       const storedCustomCards = localStorage.getItem('taskCards');
       if (storedCustomCards) {
         try {
           const parsedCustomCards = JSON.parse(storedCustomCards);
           setCustomCards(parsedCustomCards);
         } catch (error) {
-          // Handle parsing error silently
           setCustomCards([]);
         }
       }
 
-      // Load deleted calendar task IDs
       const storedDeletedIds = localStorage.getItem('deletedCalendarTaskIds');
       if (storedDeletedIds) {
         try {
           const parsedDeletedIds = JSON.parse(storedDeletedIds);
           setDeletedCalendarTaskIds(parsedDeletedIds);
         } catch (error) {
-          // Handle parsing error silently
           setDeletedCalendarTaskIds([]);
         }
       }
     } catch (error) {
-      // Handle any unexpected errors silently
       console.error('Error loading data from localStorage', error);
     }
   };
 
-  // Save calendar tasks to localStorage whenever they change
   useEffect(() => {
     if (Object.keys(calendarTasks).length > 0) {
       localStorage.setItem('calendarTasks', JSON.stringify(calendarTasks));
     }
   }, [calendarTasks]);
 
-  // Save custom cards to localStorage whenever they change
   useEffect(() => {
     if (customCards.length > 0) {
       localStorage.setItem('taskCards', JSON.stringify(customCards));
     }
   }, [customCards]);
 
-  // Save daily tasks to localStorage whenever they change
   useEffect(() => {
     if (dailyTasks.length > 0) {
       localStorage.setItem('dailyTasks', JSON.stringify(dailyTasks));
     }
   }, [dailyTasks]);
 
-  // Save deleted calendar task IDs to localStorage whenever they change
   useEffect(() => {
     if (deletedCalendarTaskIds.length > 0) {
       localStorage.setItem('deletedCalendarTaskIds', JSON.stringify(deletedCalendarTaskIds));
     }
   }, [deletedCalendarTaskIds]);
 
-  // Handle calendar task changes
   const handleCalendarTasksChange = (updatedTasks) => {
     try {
       setCalendarTasks(updatedTasks);
     } catch (err) {
-      // Error saving calendar tasks to localStorage
     }
   };
 
-  // Handle custom cards changes
   const handleCustomCardsChange = (updatedCards) => {
     try {
       setCustomCards(updatedCards);
     } catch (err) {
-      // Error saving custom cards to localStorage
     }
   };
 
-  // Handle daily tasks changes
   const handleDailyTasksChange = (updatedTasks) => {
     try {
       setDailyTasks(updatedTasks);
     } catch (err) {
-      // Error saving daily tasks to localStorage
     }
   };
 
-  // Handle task card deletion
   const handleTaskCardDelete = (cardId) => {
     try {
       const updatedCards = customCards.filter(card => card.id !== cardId);
       setCustomCards(updatedCards);
     } catch (err) {
-      // Error saving custom cards to localStorage
     }
   };
 
@@ -167,7 +140,6 @@ function Homepage({ initialTab, toggleSidebar, isSidebarOpen }) {
     setShowFocusMode(!showFocusMode);
   };
 
-  // Function to add a new task from suggestions
   const handleAddSuggestedTask = (taskTitle) => {
     if (!taskTitle || !taskTitle.trim()) return;
     
@@ -188,22 +160,16 @@ function Homepage({ initialTab, toggleSidebar, isSidebarOpen }) {
 
   return (
     <div className="homepage-container">
-      {/* Animated background */}
       <div className="animated-background"></div>
 
-      {/* Level Up notification popup */}
       <LevelPopup />
 
-      {/* XP gain notification popup */}
       <XpPopup xpAmount={xpGained} visible={showXpPopup} onClose={closeXpPopup} />
 
-      {/* Focus Mode component */}
       {showFocusMode && <TaskFocus onClose={toggleFocusMode} />}
       
-      {/* Task suggestions component */}
       <TaskSuggestions tasks={dailyTasks} onAddTask={handleAddSuggestedTask} />
 
-      {/* App content wrapper */}
       <div className="main-content pt-16">
         {error ? (
           <div className="bg-red-500 bg-opacity-20 border border-red-500 text-white px-4 py-3 rounded mx-4 my-4">
@@ -211,7 +177,6 @@ function Homepage({ initialTab, toggleSidebar, isSidebarOpen }) {
           </div>
         ) : (
           <>
-            {/* Top header with time */}
             <div className="time-header felx justify-between">
               <div className="flex">
                 <h2 className="time-ticking-text">Time is ticking...</h2>
@@ -229,9 +194,7 @@ function Homepage({ initialTab, toggleSidebar, isSidebarOpen }) {
               </div>
             </div>
 
-            {/* Main content area */}
             <div className="content-area">
-              {/* Tab selection */}
               <div className="tabs-container">
                 <button
                   className={`tab ${activeTab === 'daily' ? 'active' : ''}`}
@@ -259,7 +222,6 @@ function Homepage({ initialTab, toggleSidebar, isSidebarOpen }) {
                 </button>
               </div>
 
-              {/* Tab content */}
               <div className="tab-content mt-4">
                 {activeTab === 'daily' && (
                   <div className="daily-view">
@@ -307,7 +269,6 @@ function Homepage({ initialTab, toggleSidebar, isSidebarOpen }) {
         )}
       </div>
 
-      {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
     </div>
   );

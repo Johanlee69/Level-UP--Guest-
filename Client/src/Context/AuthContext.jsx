@@ -152,19 +152,14 @@ export const AuthProvider = ({ children }) => {
       
       const response = await authService.login(credentials);
       
-      // Ensure response has expected structure
       if (!response.success) {
         throw new Error(response.message || 'Login failed: Invalid response from server');
       }
-      
-      // Store token
       if (response.token) {
         localStorage.setItem('token', response.token);
       } else {
         throw new Error('No token received from server');
       }
-      
-      // Get user from response
       if (!response.user) {
         throw new Error('No user data received from server');
       }
@@ -190,16 +185,14 @@ export const AuthProvider = ({ children }) => {
       
       return response;
     } catch (err) {
-      console.error("Login error details:", err); // More detailed error logging
-      
-      // Pass along the specific error message from the API or service
+      console.error("Login error details:", err);
       let errorMessage = err.message;
       if (err.response?.data?.message) {
         errorMessage = err.response.data.message;
       }
       
       setError(errorMessage);
-      throw err; // Rethrow the error to be caught by the login component
+      throw err; 
     } finally {
       setIsLoading(false);
     }
@@ -308,20 +301,26 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const completeStartup = () => {
+    localStorage.setItem('hasCompletedStartup', 'true');
+    navigate('/home');
+  };
+
+  const contextValue = {
+    user,
+    isAuthenticated,
+    isLoading,
+    error,
+    register,
+    login,
+    googleLogin,
+    logout,
+    updateProfile,
+    completeStartup
+  };
+
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        isAuthenticated,
-        isLoading,
-        error,
-        login,
-        register,
-        googleLogin,
-        logout,
-        updateProfile,
-      }}
-    >
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

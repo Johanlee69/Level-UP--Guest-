@@ -2,9 +2,6 @@ const asyncHandler = require('../middleware/async');
 const ErrorResponse = require('../utils/errorResponse');
 const runCHAT = require('../config/geminiAPIConfig');
 
-// @desc    Get response from Gemini AI
-// @route   POST /api/chat/message
-// @access  Public
 exports.getChatResponse = asyncHandler(async (req, res, next) => {
   const { message } = req.body;
 
@@ -13,7 +10,6 @@ exports.getChatResponse = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    // Get response from Gemini AI
     const aiResponse = await runCHAT(message);
     
     res.status(200).json({
@@ -26,4 +22,4 @@ exports.getChatResponse = asyncHandler(async (req, res, next) => {
     console.error('Gemini API Error:', error);
     return next(new ErrorResponse('Could not generate AI response: ' + (error.message || ''), 500));
   }
-}); 
+});

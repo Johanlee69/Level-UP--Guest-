@@ -74,9 +74,6 @@ exports.changePassword = async (req, res, next) => {
   }
 };
 
-// @desc    Delete user account
-// @route   DELETE /api/users/account
-// @access  Private
 exports.deleteAccount = async (req, res, next) => {
   try {
     await User.findByIdAndDelete(req.user._id);
